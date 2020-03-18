@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<S124:DataSet
+        gml:id="DS.${id}"
+        xmlns:S124="http://www.iho.int/S124/gml/1.0"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:S100="http://www.iho.int/s100gml/1.0"
+        xmlns:gml="http://www.opengis.net/gml/3.2"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <gml:boundedBy>
+        <gml:Envelope srsName="EPSG:4326">
+            <gml:lowerCorner>${lower_corner}</gml:lowerCorner>
+            <gml:upperCorner>${upper_corner}</gml:upperCorner>
+        </gml:Envelope>
+    </gml:boundedBy>
+    <imember>
+        <S124:S124_NWPreamble gml:id="${id}">
+            <id>urn:mrn:s124:${id}</id>
+            <messageSeriesIdentifier>
+                <NameOfSeries>FINNISH NAV WARN</NameOfSeries>
+                <typeOfWarning>${type_of_warning}</typeOfWarning>
+                <warningNumber>${warning_number}</warningNumber>
+                <year>${year}</year>
+                <productionAgency>
+                    <language>eng</language>
+                    <text>Finnish national coordinator</text>
+                </productionAgency>
+                <country>FI</country>
+            </messageSeriesIdentifier>
+<#if creation_time??>
+            <sourceDate>${creation_time}</sourceDate>
+</#if>
+            <generalArea>${general_area}</generalArea>
+            <title>
+                <text>${title_text}</text>
+            </title>
+            <fixedDateRange>
+                <timeOfDayStart>${validity_start_time_utc}</timeOfDayStart>
+<#if expiry_time??>
+                <timeOfDayEnd>${expiry_time}</timeOfDayEnd>
+</#if>
+                <dateStart>
+                    <date>${validity_start_date}</date>
+                </dateStart>
+<#if expiry_date??>
+                <dateEnd>
+                    <date>${expiry_date}</date>
+                </dateEnd>
+</#if>
+            </fixedDateRange>
+            <theWarningPart xlink:href="#${id}.1"/>
+        </S124:S124_NWPreamble>
+    </imember>
+    <member>
+        <S124:S124_NavigationalWarningPart gml:id="${id}.1">
+            <id>urn:mrn:s124:${id}.1</id>
+            <geometry>
+<#if geometry_type == 'Point'>
+                <S100:pointProperty>
+                    <S100:Point gml:id="PT.${id}.1" srsName="EPSG:4326">
+                        <gml:pos>${gml_pos_coordinates}</gml:pos>
+                    </S100:Point>
+                </S100:pointProperty>
+<#elseif geometry_type == 'Polygon'>
+                <S100:surfaceProperty>
+                    <gml:Surface gml:id="S.${id}.1" srsName="EPSG:4326">
+                        <gml:patches>
+                            <gml:PolygonPatch>
+                                <gml:exterior>
+                                    <gml:LinearRing>
+                                        <gml:posList>${gml_pos_coordinates}</gml:posList>
+                                    </gml:LinearRing>
+                                </gml:exterior>
+                            </gml:PolygonPatch>
+                        </gml:patches>
+                    </gml:Surface>
+                </S100:surfaceProperty>
+<#elseif geometry_type == 'LineString'>
+                    <S100:curveProperty>
+                        <S100:Curve gml:id="S.${id}.1" srsName="EPSG:4326">
+                            <gml:segments>
+                                <gml:LineStringSegment>
+                                    <gml:posList>${gml_pos_coordinates}</gml:posList>
+                                </gml:LineStringSegment>
+                            </gml:segments>
+                        </S100:Curve>
+                    </S100:curveProperty>
+</#if>
+            </geometry>
+            <Subject>
+                <text>${warning_subject_text}</text>
+            </Subject>
+            <header xlink:href="#${id}"/>
+        </S124:S124_NavigationalWarningPart>
+    </member>
+</S124:DataSet>
